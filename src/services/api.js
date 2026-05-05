@@ -4,7 +4,7 @@ const API = axios.create({
   baseURL: "http://localhost:8080"
 });
 
-
+// ✅ Attach JWT token automatically
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -13,4 +13,13 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-export default API;
+// ✅ API functions (clean usage)
+export const getMovies = () => API.get("/movies");
+
+export const loginUser = (data) => API.post("/auth/login", data);
+
+export const registerUser = (data) => API.post("/auth/register", data);
+
+export const bookMovie = (data) => API.post("/booking", data);
+
+export default API; // 👈 keep this (important)

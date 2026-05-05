@@ -6,82 +6,122 @@ function Movies() {
   const [movies, setMovies] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch movies from backend
   useEffect(() => {
     API.get("/movies")
       .then((res) => setMovies(res.data))
-      .catch(() => alert("Error fetching movies"));
+      .catch((err) => console.log(err));
   }, []);
 
-  // Logout function
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2 style={{ color: "white" }}>🎬 Available Movies</h2>
-        <button onClick={logout} style={{ padding: "8px 15px", background: "red", color: "white", border: "none", borderRadius: "5px" }}>
-          Logout
-        </button>
-      </div>
+    <div style={styles.page}>
+      {/* Title */}
+      <h1 style={styles.title}>🎬 Available Movies</h1>
 
-      {/* Movies Grid */}
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          marginTop: "20px"
-        }}
-      >
-        {movies.length === 0 ? (
-          <p style={{ color: "white" }}>No movies available</p>
-        ) : (
-          movies.map((m) => (
-            <div
-              key={m.id}
-              style={{
-                width: "220px",
-                margin: "15px",
-                padding: "15px",
-                background: "white",
-                borderRadius: "10px",
-                boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
-                textAlign: "center"
-              }}
+      {/* Movies */}
+      <div style={styles.grid}>
+        {movies.map((movie) => (
+          <div key={movie.id} style={styles.card}>
+            <h2 style={styles.movieTitle}>{movie.title}</h2>
+            <p style={styles.text}>
+              <b>Genre:</b> {movie.genre}
+            </p>
+            <p style={styles.text}>
+              <b>Language:</b> {movie.language}
+            </p>
+            <p style={styles.text}>
+              <b>Duration:</b> {movie.duration} mins
+            </p>
+
+            <button
+              style={styles.bookBtn}
+              onClick={() =>
+                navigate("/booking", { state: { movieId: movie.id } })
+              }
             >
-              <h3>{m.title}</h3>
-              <p><b>Genre:</b> {m.genre}</p>
-              <p><b>Language:</b> {m.language}</p>
-              <p><b>Duration:</b> {m.duration} min</p>
-
-              <button
-                onClick={() =>
-                  navigate("/booking", { state: { movieId: m.id } })
-                }
-                style={{
-                  marginTop: "10px",
-                  padding: "8px",
-                  background: "#ff4b2b",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer"
-                }}
-              >
-                Book Now
-              </button>
-            </div>
-          ))
-        )}
+              Book Now
+            </button>
+          </div>
+        ))}
       </div>
+
+      {/* Logout button at bottom */}
+      <button style={styles.logoutBtn} onClick={logout}>
+        Logout
+      </button>
     </div>
   );
 }
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    background: "linear-gradient(to right, #000428, #004e92)",
+    padding: "30px",
+    textAlign: "center",
+  },
+
+  title: {
+    color: "white",
+    marginBottom: "30px",
+    fontSize: "40px",
+    fontWeight: "bold",
+  },
+
+  grid: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: "30px",
+  },
+
+  card: {
+    width: "250px",
+    background: "white",
+    borderRadius: "15px",
+    padding: "20px",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.4)",
+  },
+
+  movieTitle: {
+    color: "black",
+    marginBottom: "15px",
+  },
+
+  text: {
+    color: "black",
+    fontSize: "16px",
+    margin: "8px 0",
+  },
+
+  bookBtn: {
+    marginTop: "15px",
+    width: "100%",
+    padding: "12px",
+    background: "#ff4b2b",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "bold",
+  },
+
+  logoutBtn: {
+    marginTop: "40px",
+    padding: "12px 30px",
+    background: "red",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "bold",
+  },
+};
 
 export default Movies;
