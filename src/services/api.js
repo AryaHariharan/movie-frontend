@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://bookmyshow-l6oi.onrender.com"
+  baseURL: "http://localhost:8080"
 });
 
 // ✅ Attach JWT token automatically
